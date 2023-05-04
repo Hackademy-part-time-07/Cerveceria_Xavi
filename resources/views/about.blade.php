@@ -7,12 +7,11 @@
 
 <h1>Quienes somos</h1>
 <div class="d-flex justify-content-center">
-    <div class="card col-md-6">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title">Cervecerías SL</h5>
-            <p class="card-text">Somos un portal de cervezerias de España y parte del extrangero.</p>
-        </div>
+
+    <x-card name="Cervecerías SL" 
+    urlImg="{{ asset('img/default.jpg') }}">
+    <x-slot:place>
+        Somos un portal de cervezerias de España y parte del extrangero.
         <ul class="list-group list-group-flush">
             <li class="list-group-item"><a href="tel:34666555444" target="_system" class="contacto">Telefono +34 666 555
                     444</a></li>
@@ -21,8 +20,10 @@
             <li class="list-group-item"><a href="http://www.wa.me?34666555444" target="_system"
                     class="contacto">Whatsapp +34 666 555 444</a></li>
         </ul>
+    </x-slot:place>
 
-    </div>
+</x-card>
+
 </div>
 
 @endsection

@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg bg-warning">
+    <nav class="navbar navbar-expand-lg bg-warning sticky-top">
         <div class="container-fluid">
             <div class="container d-flex justify-content-between">
                 <a class="navbar-brand" href="{{ route ('home') }}"><img src="{{ asset ('/img/craneo.png') }}"
@@ -40,7 +40,7 @@
     </article>
 
 
-    <div class="container-fluid fixed-bottom bg-secondary">
+    <div class="container-fluid bg-secondary fixed-bottom">
         <footer class="container text-white p-2">
             Pie de pagina
         </footer>
