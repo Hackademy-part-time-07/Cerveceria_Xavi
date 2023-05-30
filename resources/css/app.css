@@ -1,0 +1,20 @@
+h1 {
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 30px;
+}
+
+article {
+    margin-bottom: 100px;
+}
+
+.contacto {
+    text-decoration: none;
+    color: var(--bs-warning);
+
+}
+
+.contacto:hover {
+    text-decoration: underline;
+    color: red
+}

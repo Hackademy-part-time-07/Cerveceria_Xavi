@@ -2,33 +2,81 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BreweryRequest;
+use App\Models\Brewery;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use RuntimeException;
 
-class BreweryController extends Controller
-{
-    public static  $breweries = [
-        ['id' => 1, 'nombre' => 'Uceda', 'poblacion' => 'Madrid'],
-        ['id' => 2, 'nombre' => 'Dunne\'s', 'poblacion' => 'Barcelona'],
-        ['id' => 3, 'nombre' => 'Triana', 'poblacion' => 'Sevilla'],
-        ['id' => 4, 'nombre' => 'Moraima', 'poblacion' => 'Madrid'],
-        ['id' => 5, 'nombre' => 'Yunque', 'poblacion' => 'Ponferrada'],
-        ['id' => 6, 'nombre' => 'Olego', 'poblacion' => 'Ponferrada'],
-        ['id' => 7, 'nombre' => 'The Growler', 'poblacion' => 'Barcelona']
-    ]; 
+class BreweryController extends Controller {
+  public function index () {
+    $breweries = Brewery::orderby('name')->get();
+    return view('breweries.index', ['breweries' => $breweries]);
+  }
 
-    public function list () {
-        return view('breweries', ['breweries' => self::$breweries]);
+    public function show (Brewery $brewery) {
+        return view('breweries.show', compact('brewery'));
     }
 
-    public function details ($id) {
-        $brewery = null;
-        $i = 0;
-        while (($i < count(self::$breweries)) && ($brewery == null)) {
-            if ($id == self::$breweries[$i]['id']){
-                $brewery = self::$breweries[$i];
-            }
-        $i++;
-        }
-        return view('brewery', ['brewery' => $brewery]);
+    public function create () {
+      return view('breweries.create');
     }
+
+    public function store (BreweryRequest $request) {
+      $url = '';
+      if($request->hasFile('img')) {
+        $path = $request->file('img')->store('public/breweries');
+        $url = Storage::url($path);
+      }
+
+    try {
+      $brewery = new Brewery ();
+      $brewery->fill($request->validated());
+      $brewery->img = $url;
+
+      $brewery->saveOrFail ();
+    } catch (RuntimeException $e) {
+      return back()->with('message', 'Los datos no son correctos')->with('code', 500);
+    }
+
+    return redirect()->route('breweries')->with('message', 'Cervecería guardada correctamente')->with('code', 0);
+
+  }
+
+  public function edit (Brewery $brewery) {
+    return view('breweries.edit', compact('brewery'));
+  }
+
+  public function update (BreweryRequest $request, Brewery $brewery) {
+
+      $url = '';
+      if($request->hasFile('img')) {
+        $path = $request->file('img')->store('public/breweries');
+        $url = Storage::url($path);
+      }
+
+    try {
+      $brewery->fill($request->validated());
+      if($request->hasFile('img')) {
+        
+      }
+      $brewery->img = $url;
+
+      $brewery->saveOrFail ();
+
+    } catch (RuntimeException $e) {
+      return back()->with('message', 'Los datos no son correctos')->with('code', 200);
+    }
+    return redirect()->route('breweries')->with('message', 'Cervecería actualizada correctamente')->with('code', 0);
+  }
+
+  public function delete (Brewery $brewery) {
+    try {
+      $brewery->deleteOrFail ();
+  }  catch (RuntimeException $e) {
+    return back()->with('message', 'No ha sido possible borrar la cervecería')->with('code', 500);
+    }
+    return redirect()->route('breweries')->with('message', 'Cervecería eliminada correctamente')->with('code', 0);
+  }
 }
