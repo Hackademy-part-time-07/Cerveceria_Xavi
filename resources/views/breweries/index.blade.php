@@ -25,7 +25,13 @@ crossorigin=""></script>
 <x-msgflash />
 
 <div class="d-flex justify-content-center my-4">
-<a href="{{ route('breweries.create') }}" class="btn btn-warning">Nueva cervecería</a>
+@auth
+    <a href="{{ route('breweries.create') }}" class="btn btn-warning">Nueva cervecería</a>
+@endauth
+@guest
+    Solamente los usuarios registrados pueden crear cervecerías
+@endguest
+
 </div>
 
 <div class="row d-flex justify-content-between">

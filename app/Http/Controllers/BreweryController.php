@@ -7,6 +7,7 @@ use App\Models\Brewery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 use RuntimeException;
 
 class BreweryController extends Controller {
@@ -24,18 +25,14 @@ class BreweryController extends Controller {
     }
 
     public function store (BreweryRequest $request) {
-      $url = '';
-      if($request->hasFile('img')) {
-        $path = $request->file('img')->store('public/breweries');
-        $url = Storage::url($path);
-      }
-
-    try {
       $brewery = new Brewery ();
       $brewery->fill($request->validated());
-      $brewery->img = $url;
-
+      if($request->hasFile('img')) {
+        $brewery->img = Storage::url($request->file('img')->store('public/breweries')); }
+      $brewery->author = Auth::id();
+    try {
       $brewery->saveOrFail ();
+
     } catch (RuntimeException $e) {
       return back()->with('message', 'Los datos no son correctos')->with('code', 500);
     }
@@ -49,22 +46,14 @@ class BreweryController extends Controller {
   }
 
   public function update (BreweryRequest $request, Brewery $brewery) {
-
-      $url = '';
-      if($request->hasFile('img')) {
-        $path = $request->file('img')->store('public/breweries');
-        $url = Storage::url($path);
-      }
-
+    $brewery->fill($request->validated());
+    if($request->hasFile('img')) {
+      $brewery->img = Storage::url($request->file('img')->store('public/breweries'));
+    }
     try {
-      $brewery->fill($request->validated());
-      if($request->hasFile('img')) {
-        
-      }
-      $brewery->img = $url;
 
       $brewery->saveOrFail ();
-
+      
     } catch (RuntimeException $e) {
       return back()->with('message', 'Los datos no son correctos')->with('code', 200);
     }

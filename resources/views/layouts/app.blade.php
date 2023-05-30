@@ -36,6 +36,19 @@
                         <a class="nav-link" href="#">Cervezas</a>
                         <a class="nav-link" href="{{ route ('contact.create') }}">Contacto</a>
                         <a class="nav-link" href="{{ route ('about') }}">Quienes somos</a>
+                        @if (Route::has('login'))
+                            @if (Auth::check())
+                            <a class="nav-link" href="javascript:document.getElementById('logout-form').submit();">
+                            No soy {{ Auth::user()->name }}
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                            @else
+                            <a class="nav-link" href="{{ route('login') }}">Login</a>
+                            <a class="nav-link" href="{{ route('register') }}">Registro</a>
+                            @endif
+                        @endif
                     </div>
                 </div>
             </div>

@@ -11,8 +11,6 @@
         place="{!! $brewery->place !!}"
         description="{!! $brewery->description !!}"
         urlBack="{{ route('breweries') }}"
-        urlEdit="{{ route('breweries.edit', $brewery->id) }}"
-        urlDelete="{{ route('breweries.delete', $brewery->id) }}"
         map="S"
         lat="{{ $brewery->latitude }}"
         long="{{ $brewery->longitude }}">
@@ -24,6 +22,16 @@
                 {{ asset('img/default.jpg') }}
             @endif
         </x-slot:urlImg>
+
+        @if ((null !== Auth::user()) && $brewery->author == Auth::user()->id)
+            <x-slot:urlEdit>{{ route('breweries.edit', $brewery->id) }}</x-slot:urlEdit>
+            <x-slot:urlDelete>{{ route('breweries.delete', $brewery->id) }}</x-slot:urlDelete>
+        @endif
+        
+
+
+
+        
 </x-card>
 
 </div>
